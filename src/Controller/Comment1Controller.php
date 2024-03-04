@@ -52,7 +52,7 @@ class Comment1Controller extends AbstractController
                 }
     
                 // Mettez à jour la propriété avatar de l'entité Comment1 avec le chemin du fichier
-                //$comment->setAvatar($newFilename);
+                //$comment->setAvatar($newFilename);//$comment->setAvatar($newFilename);
             }
 
 
