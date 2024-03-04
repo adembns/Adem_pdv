@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<!-- ======================= Start Page Title ===================== -->
+<div class="page-title image-title" style="background-image:url('{{ asset('assets/img/banner.jpg') }}');">
+	<div class="container">
+		<div class="page-title-wrap">
+			<h2>Our Blogs</h2>
+			<p><a href="#" class="theme-cl">Home</a> | <span>Our Blogs</span></p>
+		</div>
+	</div>
+</div>
+<!-- ======================= End Page Title ===================== -->
+
+<!-- =========== Start All Hotel In Grid View =================== -->
+<section class="gray-bg">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 col-sm-6">
+				<div class="blog-box blog-grid-box">
+					<div class="blog-grid-box-img">
+						<img src="{{ vich_uploader_asset(article1, 'imageFile')}}" class="img-responsive" alt="">
+					</div>
+					<div class="blog-grid-box-content">
+						<div class="blog-avatar text-center">
+							<img src="{{ asset('assets/img/user-1.jpg') }}" class="img-responsive" alt="">
+							<p><strong>By</strong> <span class="theme-cl">Adam Khiwak</span></p>
+						</div>
+						<h2>{{ article1.contenu }}<h2>
+						
+					</div>
+				<style>
+    .btn-like,
+    .btn-dislike {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-like i,
+    .btn-dislike i {
+        margin-right: 5px; /* Ajustez la marge selon vos préférences */
+    }
+</style>
+
+<form action="{{ path('app_article1_like', {'id': article1.id}) }}" method="post" class="btn-like">
+    <button type="submit" class="btn">
+        <i class="fas fa-thumbs-up"></i> Like
+    </button>
+</form>
+
+<form action="{{ path('app_article1_dislike', {'id': article1.id}) }}" method="post" class="btn-dislike">
+    <button type="submit" class="btn">
+        <i class="fas fa-thumbs-down"></i> Dislike
+    </button>
+</form>
+
+
+                    {{ include('comment1/_form.html.twig') }}
+                    <style>
+                        #comments-section {
+                            margin-top: 20px;
+                        }
+
+                        .comment {
+                            border: 1px solid #ddd;
+                            padding: 10px;
+                            margin-bottom: 10px;
+                        }
+
+                        .comment p.comment-info {
+                            font-style: italic;
+                            color: #888;
+                            font-size: 0.9em;
+                        }
+
+                        /* Adjust form styles as needed */
+                        form {
+                            margin-top: 20px;
+                        }
+                    </style>
+                    <div id="comments-section">
+        <h2>Comments</h2>
+
+        {# Display existing comments #}
+        {% for comment in comments %}
+            <div class="comment">
+                <p>{{ comment.contenu }}</p>
+                <p class="comment-info">
+                    Posted by lorem on {{ comment.created|date('F j, Y H:i') }}
+                </p>
+                    <a style="color:red;" href="{{ path('app_comment1_edit', {'id': comment.id}) }}">edit</a>
+					
+            </div>
+        {% endfor %}
+
+       </div><br>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+</section>
+
+<!-- =========== End All Hotel In Grid View =================== -->
+{% endblock %}

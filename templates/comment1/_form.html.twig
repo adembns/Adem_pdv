@@ -1,0 +1,47 @@
+   <!-- Row -->
+				<div class="row mrg-0">
+					<div class="tr-single-box short-box">
+						<div class="col-sm-3 hidden-xs align-self-center">
+							<h4>Shorty By</h4>
+						</div>
+						
+						<div class="col-sm-9 text-right">
+						
+							<div class="btn-group mr-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Short By
+								</button>
+								<div class="dropdown-menu pull-right animated flipInX">
+									<a href="{{ path('app_comment1_date')}}">By Date</a>
+								</div>
+							</div>
+							
+							<div class="btn-group">
+								 <a href="destination-grid.html" class="btn btn-default tooltips">
+									 <i class="ti-flix ti-layout-grid2"></i>
+								 </a>
+							</div>
+
+							<div class="btn-group">
+								 <a href="destination-list.html" class="btn btn-default tooltips">
+									 <i class="ti-flix ti-view-list-alt"></i>
+								 </a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Row -->
+
+
+
+{{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+                                        <div class="billing-address-form">
+                                        <br>
+                                        <br>
+                                                <p>
+                                                    {{ form_widget(form.contenu, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(form.contenu) }}
+                                                                                            <button class="btn btn-success">{{ button_label|default('Envoyer') }}</button>
+                                                </p>
+                                        </div>
+{{ form_end(form) }}
