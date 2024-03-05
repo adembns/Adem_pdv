@@ -3,81 +3,79 @@
 {% block body %}
 <!-- ======================= Start Page Title ===================== -->
 <div class="page-title image-title" style="background-image:url('{{ asset('assets/img/banner.jpg') }}');">
-	<div class="container">
-		<div class="page-title-wrap">
-			<h2>Our Blogs</h2>
-			<p><a href="#" class="theme-cl">Home</a> | <span>Our Blogs</span></p>
-		</div>
-	</div>
+    <div class="container">
+        <div class="page-title-wrap">
+            <h2>Our Blogs</h2>
+            <p><a href="#" class="theme-cl">Home</a> | <span>Our Blogs</span></p>
+        </div>
+    </div>
 </div>
 <!-- ======================= End Page Title ===================== -->
 
 <!-- =========== Start All Hotel In Grid View =================== -->
 <section class="gray-bg">
-	<div class="container">
-	<!-- Row -->
-				<div class="row mrg-0">
-					<div class="tr-single-box short-box">
-						<div class="col-sm-3 hidden-xs align-self-center">
-							<h4>Shorty By</h4>
-						</div>
-						
-						<div class="col-sm-9 text-right">
-						
-							<div class="btn-group mr-lg-2">
-								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Short By
-								</button>
-								<div class="dropdown-menu pull-right animated flipInX">
-									<a href="{{ path('app_article1_asc')}}">Accending</a>
-									<a href="{{ path('app_article1_desc')}}">Decending</a>
-									<a href="{{ path('app_article1_front')}}">Default</a>
-									<a href="#">By Date</a>
-								</div>
-							</div>
-							
-							<div class="btn-group">
-								 <a href="destination-grid.html" class="btn btn-default tooltips">
-									 <i class="ti-flix ti-layout-grid2"></i>
-								 </a>
-							</div>
+    <div class="container">
+        <!-- Row -->
+        <div class="row mrg-0">
+            <div class="tr-single-box short-box">
+                <div class="col-sm-3 hidden-xs align-self-center">
+                    <h4>Shorty By</h4>
+                </div>
+                
+                <div class="col-sm-9 text-right">
+                
+                    <div class="btn-group mr-lg-2">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Short By
+                        </button>
+                        <div class="dropdown-menu pull-right animated flipInX">
+                            <a href="{{ path('app_article1_asc')}}">Accending</a>
+                            <a href="{{ path('app_article1_desc')}}">Decending</a>
+                            <a href="{{ path('app_article1_front')}}">Default</a>
+                            <a href="#">By Date</a>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                         <a href="destination-grid.html" class="btn btn-default tooltips">
+                             <i class="ti-flix ti-layout-grid2"></i>
+                         </a>
+                    </div>
 
-							<div class="btn-group">
-								 <a href="destination-list.html" class="btn btn-default tooltips">
-									 <i class="ti-flix ti-view-list-alt"></i>
-								 </a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Row -->
-		<div class="row">
-			{% for article in articles %}
-			<div class="col-md-4 col-sm-6">
-				<div class="blog-box blog-grid-box">
-					<div class="blog-grid-box-img">
-						<img src="{{ vich_uploader_asset(article, 'imageFile')}}" class="img-responsive" alt="">
-					</div>
-					<div class="blog-grid-box-content">
-						<div class="blog-avatar text-center">
-							<img src="{{ asset('assets/img/user-1.jpg') }}" class="img-responsive" alt="">
-							<p><strong>By</strong> <span class="theme-cl">Adam Khiwak</span></p>
-						</div>
-						<p>{{ article.contenu }}</p>
-						
-						<a href="{{ path('app_article1_show', {'id': article.id}) }}" class="theme-cl" title="Read More..">Continue...</a>
-						<p>Likes: {{ likesCounts[article.getId()] }}</p>
-    					<p>Dislikes: {{ dislikesCounts[article.getId()] }}</p>
-					</div>
-				</div>
-			</div>
-								{% endfor %}
-								
-
-		</div>
-	
-		{{knp_pagination_render(articles)}}
-	</div>
+                    <div class="btn-group">
+                         <a href="destination-list.html" class="btn btn-default tooltips">
+                             <i class="ti-flix ti-view-list-alt"></i>
+                         </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Row -->
+        <div class="row">
+            {% for article in articles %}
+            <div class="col-md-4 col-sm-6">
+                <div class="blog-box blog-grid-box">
+                    <div class="blog-grid-box-img">
+                        <img src="{{ vich_uploader_asset(article, 'imageFile')}}" class="img-responsive" alt="">
+                    </div>
+                    <div class="blog-grid-box-content">
+                        <div class="blog-avatar text-center">
+                            <img src="{{ asset('assets/img/user-1.jpg') }}" class="img-responsive" alt="">
+                            <p><strong>By</strong> <span class="theme-cl">Adam Khiwak</span></p>
+                        </div>
+                        <p>{{ article.contenu|split(' ')|slice(0, 5)|join(' ') ~ '...' }}</p>
+                        
+                        <a href="{{ path('app_article1_show', {'id': article.id}) }}" class="theme-cl" title="Read More..">Continue...</a>
+                        <p>Likes: {{ likesCounts[article.getId()] }}</p>
+                        <p>Dislikes: {{ dislikesCounts[article.getId()] }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    
+        {{ knp_pagination_render(articles) }}
+    </div>
 </section>
 <!-- =========== End All Hotel In Grid View =================== -->
 {% endblock %}

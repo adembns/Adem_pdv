@@ -48,31 +48,34 @@ class Article1Controller extends AbstractController
             'articles' => $article1s,
         ]);
     }*/
+
     #[Route('/front', name: 'app_article1_front', methods: ['GET'])]
-    public function indexf(Article1Repository $article1Repository, Request $request,PaginatorInterface $paginator,EntityManagerInterface $entityManager): Response
-    {
-        $pagination = $paginator->paginate(
+public function indexf(Article1Repository $article1Repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
+{
+    $pagination = $paginator->paginate(
+        $article1Repository->paginationQuery(),
+        $request->query->get('page', 1),
+    );
 
-            $article1Repository->paginationQuery(),
-            $request->query->get('page',1),
-            
-        );
-            
+    // Récupérer les likes et dislikes pour chaque article
+    $likesCounts = [];
+    $dislikesCounts = [];
+    foreach ($pagination as $article) {
+        $likesCounts[$article->getId()] = $entityManager->getRepository(LikeDislike::class)->count(['article' => $article, 'type' => 'like']);
+        $dislikesCounts[$article->getId()] = $entityManager->getRepository(LikeDislike::class)->count(['article' => $article, 'type' => 'dislike']);
 
-        // Récupérer les likes et dislikes pour chaque article
-        $likesCounts = [];
-        $dislikesCounts = [];
-        foreach ($pagination as $article) {
-            $likesCounts[$article->getId()] = $entityManager->getRepository(LikeDislike::class)->count(['article' => $article, 'type' => 'like']);
-            $dislikesCounts[$article->getId()] = $entityManager->getRepository(LikeDislike::class)->count(['article' => $article, 'type' => 'dislike']);
-        }
-
-        return $this->render('article1/blog.html.twig', [
-            'articles' => $pagination,
-            'likesCounts' => $likesCounts,
-            'dislikesCounts' => $dislikesCounts,
-        ]);
+        // Limiter le contenu de l'article à 5 mots
+        $content = explode(' ', $article->getContenu());
+        $shortContent = implode(' ', array_slice($content, 0, 5));
+        $article->setContenu($shortContent . '...');
     }
+
+    return $this->render('article1/blog.html.twig', [
+        'articles' => $pagination,
+        'likesCounts' => $likesCounts,
+        'dislikesCounts' => $dislikesCounts,
+    ]);
+}
 
 
 
@@ -169,7 +172,7 @@ class Article1Controller extends AbstractController
 
 
 
-    #[Route('/like/{id}', name: 'app_article1_like', methods: ['POST'])]
+  /*  #[Route('/like/{id}', name: 'app_article1_like', methods: ['POST'])]
 public function like(Article1 $article1,Security $security): Response
 {
     $like = new LikeDislike();
@@ -211,9 +214,63 @@ public function dislike(Article1 $article1,Security $security): Response
 
     return $this->redirectToRoute('app_article1_front', ['id' => $article1->getId()]);
 }
+*/
 
+#[Route('/like/{id}', name: 'app_article1_like', methods: ['POST'])]
+public function like(Article1 $article1, Security $security, EntityManagerInterface $entityManager): Response
+{
+    $user = $security->getUser();
+    
+    // Vérifier si l'utilisateur a déjà liké cet article
+    $existingLike = $entityManager->getRepository(LikeDislike::class)->findOneBy(['article' => $article1, 'user' => $user, 'type' => 'like']);
 
+    if ($existingLike) {
+        // L'utilisateur a déjà liké cet article, redirigez ou affichez un message d'erreur
+        // par exemple:
+        // return $this->redirectToRoute('app_article1_front', ['id' => $article1->getId()]);
+        // ou
+        // throw new \Exception('Vous avez déjà liké cet article.');
+    } else {
+        // Créer un nouveau LikeDislike
+        $like = new LikeDislike();
+        $like->setArticle($article1)
+            ->setType('like')
+            ->setUser($user);
 
+        $entityManager->persist($like);
+        $entityManager->flush();
+    }
+
+    return $this->redirectToRoute('app_article1_front', ['id' => $article1->getId()]);
+}
+
+#[Route('/dislike/{id}', name: 'app_article1_dislike', methods: ['POST'])]
+public function dislike(Article1 $article1, Security $security, EntityManagerInterface $entityManager): Response
+{
+    $user = $security->getUser();
+    
+    // Vérifier si l'utilisateur a déjà disliké cet article
+    $existingDislike = $entityManager->getRepository(LikeDislike::class)->findOneBy(['article' => $article1, 'user' => $user, 'type' => 'dislike']);
+
+    if ($existingDislike) {
+        // L'utilisateur a déjà disliké cet article, redirigez ou affichez un message d'erreur
+        // par exemple:
+        // return $this->redirectToRoute('app_article1_front', ['id' => $article1->getId()]);
+        // ou
+        // throw new \Exception('Vous avez déjà disliké cet article.');
+    } else {
+        // Créer un nouveau LikeDislike
+        $dislike = new LikeDislike();
+        $dislike->setArticle($article1)
+            ->setType('dislike')
+            ->setUser($user);
+
+        $entityManager->persist($dislike);
+        $entityManager->flush();
+    }
+
+    return $this->redirectToRoute('app_article1_front', ['id' => $article1->getId()]);
+}
 
     #[Route('/{id}', name: 'app_article1_show', methods: ['GET', 'POST'])]
     public function show(Article1 $article1, Request $request, EntityManagerInterface $entityManager): Response
